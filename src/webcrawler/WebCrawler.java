@@ -7,12 +7,11 @@ import webcrawler.digestpage.ProcessPage;
  * Created by Gabe Sargeant on 22/01/17.
  */
 public class WebCrawler {
-    private String URI, WORDS;
+    private String URI;
     private String BASE_URI;
 
-    WebCrawler(String uri, String words) {
+    WebCrawler(String uri) {
         URI = uri;
-        WORDS = words;
 
         if(uri.contains("http://www.")){
             BASE_URI = uri.replace("http://www.","");
@@ -22,14 +21,14 @@ public class WebCrawler {
         }
         else
             BASE_URI = uri;
-
     }
 
     public void startCrawl(){
         Logger.info("URI ############# = " + BASE_URI);
+        Logger.info(URI);
 
-            ProcessPage p = new ProcessPage(BASE_URI);
-            p.extractLinks(BASE_URI);
+            ProcessPage p = new ProcessPage(URI);
+            p.extractLinks(URI);
         for (int i = 0; i < 1000; i++){
             p.next();
             p.run();
@@ -42,17 +41,7 @@ public class WebCrawler {
         }
 
 
-       // crawl(URI);
-
-        //checkDBforExistingURI
-        //if existing queue. Spin off runnable
-        //ifnot process first page then start crawling pages.
-
-
-
 
 
     }
-
-
 }

@@ -15,54 +15,69 @@ import java.util.ArrayList;
  */
 public class ProcessPage {
 
-    private String TARGET_URL;
     private final String BASE_URI;
+    private String TARGET_URL;
     private DBHandler dbHandler;
+    private DigestPage digestPage;
 
-    public ProcessPage(String baseURI){
+
+    public ProcessPage(String baseURI) {
         BASE_URI = baseURI;
         dbHandler = new DBHandler();
-        // fetch from db a URL that is yet to be explored.
 
+        //prepares page digest mech
+        digestPage = new DigestPage();
     }
 
-    public void next()
-    {
+    public void next() {
         TARGET_URL = dbHandler.getNextTarget(BASE_URI);
     }
 
-    public boolean run(){
+    public boolean run() {
         extractLinks(TARGET_URL);
+
 
         return true;
     }
 
-    public int count()
-    {
+    public int count() {
         return dbHandler.count(BASE_URI);
     }
 
     public void extractLinks(String target) {
-        Logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>The target is ::" + target);
+        Logger.info("Target URL" + target);
 
-        ArrayList <String> arrayList = new ArrayList<>();
-        try{
-            Document doc = Jsoup.connect(target).get();
+        Document doc = null;
+        Digest digest = null;
+        ArrayList<String> arrayList = new ArrayList<>();
+
+        try {
+            doc = Jsoup.connect(target).get();
             //create a list of elements that are all urls
             Elements questions = doc.select("a[href]");
 
-            for(Element link: questions) {
-                if((link.attr("abs:href").contains(BASE_URI)) && (! link.attr("abs:href").contains("#discourse-comments"))){
+            for (Element link : questions) {
+                if ((link.attr("abs:href").contains(BASE_URI)) && (!link.attr("abs:href").contains("#discourse-comments"))) {
                     arrayList.add(link.attr("abs:href"));
                 }
             }
+
+            //Links are sorted.
+            //now to scann the document
+
+            //digest = digestPage.consume(doc);
+
 
         } catch (IOException e) {
             Logger.error("There was an error trying to connect to the target URL " + target + e);
         }
 
+        if (doc != null) {
 
-        dbHandler.insertNewURL(BASE_URI,arrayList);
+        }
+
+        //dbHandler.submitDigest(digest);
+        dbHandler.insertNewURL(BASE_URI, arrayList);
     }
 
 

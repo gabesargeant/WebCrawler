@@ -15,7 +15,7 @@ import java.util.Properties;
 public class Main {
 
     private static Options options = new Options();
-    private static String uri, wordlist;
+    private static String uri ;
 
 
     public static void main(String args[]){
@@ -26,11 +26,11 @@ public class Main {
             help();
         }
         else{
-            Logger.info( uri + ":" + wordlist);
+            Logger.info( uri );
 
         }
 
-        WebCrawler wc = new WebCrawler(uri, wordlist);
+        WebCrawler wc = new WebCrawler(uri);
         wc.startCrawl();
 
 
@@ -43,10 +43,9 @@ public class Main {
 
         try{
             CommandLine line = commandLineParser.parse(options,args);
-            if(line.hasOption("u") && line.hasOption("w")) {
+            if(line.hasOption("u")) {
                 result = true;
                 uri = line.getOptionValue("u");
-                wordlist = line.getOptionValue("w");
             }
 
         }catch (Exception e)
@@ -62,7 +61,7 @@ public class Main {
         HelpFormatter helpFormatter = new HelpFormatter();
         String header="This is a simple and extensible web crawler. It uses a connection to a DB, Currently Mysql to hold status information on the search of particular pages that is crawls.";
         String footer="This was build by Gabriel Sargeant 2016. I built this and that, souce on github.com/gabesargeant/";
-        String cmdSyntax = "java -jar WebCrawler.jar -u www.google.com -d database.properties -w wordlist.txt";
+        String cmdSyntax = "java -jar WebCrawler.jar -u www.google.com";
 
         helpFormatter.printHelp(cmdSyntax, header, options, footer, true);
     }
@@ -80,14 +79,14 @@ public class Main {
                 .longOpt("URI")
                 .build());
 
-        options.addOption(Option.builder("w")
-                .required()
-                .argName("Word List")
-                .hasArg()
-                .numberOfArgs(1)
-                .desc("The full name of word list that will be searched for on pages crawled. ie words.txt")
-                .longOpt("WORDLIST")
-                .build());
+//        options.addOption(Option.builder("w")
+//                .required()
+//                .argName("Word List")
+//                .hasArg()
+//                .numberOfArgs(1)
+//                .desc("The full name of word list that will be searched for on pages crawled. ie words.txt")
+//                .longOpt("WORDLIST")
+//                .build());
 
 
 
@@ -96,7 +95,7 @@ public class Main {
 
     public static String[] getDatabaseSettings() throws IOException{
 
-        String databaseSettings[]  = new String[5];
+        String databaseSettings[]  = new String[10];
         //to load application's properties, we use this class
         Properties mainProperties = new Properties();
         FileInputStream file;
@@ -107,12 +106,21 @@ public class Main {
         //load all the properties from this file
         mainProperties.load(file);
         file.close();
-
+        //#crawler DB
         databaseSettings[0] = mainProperties.getProperty("host");
         databaseSettings[1] = mainProperties.getProperty("port");
         databaseSettings[2] = mainProperties.getProperty("dbName");
         databaseSettings[3] = mainProperties.getProperty("dbUser");
         databaseSettings[4] = mainProperties.getProperty("psw");
+
+        databaseSettings[5] = mainProperties.getProperty("mig_host");
+        databaseSettings[6] = mainProperties.getProperty("mig_port");
+        databaseSettings[7] = mainProperties.getProperty("mig_dbName");
+        databaseSettings[8] = mainProperties.getProperty("mig_dbUser");
+        databaseSettings[9] = mainProperties.getProperty("mig_psw");
+
+
+
 
         return databaseSettings;
     }

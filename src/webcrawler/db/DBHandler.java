@@ -5,16 +5,17 @@ package webcrawler.db;/**
 
 
 import org.pmw.tinylog.Logger;
+import webcrawler.digestpage.Digest;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Properties;
+import java.util.*;
+import java.util.Date;
 
 import static webcrawler.Main.getDatabaseSettings;
 
 public class DBHandler {
-    private String host, port, dbUser, dbName, psw;
+    private String host, port, dbUser, dbName, psw, mig_host, mig_port, mig_dbName, mig_dbUser, mig_psw;
 
     private Properties dbproperties = new Properties();
 
@@ -27,6 +28,13 @@ public class DBHandler {
             dbName = databaseSettings[2];
             dbUser = databaseSettings[3];
             psw = databaseSettings[4];
+
+            //results db info
+            mig_host=databaseSettings[5];
+            mig_port=databaseSettings[6];
+            mig_dbName=databaseSettings[7];
+            mig_dbUser=databaseSettings[8];
+            mig_psw=databaseSettings[9];
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,6 +53,23 @@ public class DBHandler {
         }catch (Exception e){
             Logger.error("There was an error connecting to the dataase" + e);
         }
+
+        return con;
+    }
+
+    public Connection getConnectionResultsDB() {
+
+        Connection con = null;
+
+        String connectionString = "jdbc:mysql://"+mig_host+":"+mig_port+"/"+mig_dbName+"?allowMultipleQueries=true";
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection(connectionString, mig_dbUser, mig_psw);
+        }catch (Exception e){
+            Logger.error("There was an error connecting to the "+ mig_dbName + " dataase" + e);
+        }
+
 
         return con;
     }
@@ -196,4 +221,49 @@ public class DBHandler {
         }
         return ans;
     }
+
+    public void submitDigest(Digest digest) {
+        Date date = digest.getDate();
+        String title = digest.getTitle();
+        String url = digest.getURL();
+        String country = digest.getCountry();
+        String member = digest.getMember();
+        String decisionText = digest.getDecisionText();
+        String decisionResult = digest.getDecisionResult();
+        String place = digest.getPlace();
+
+        try{
+            String SQL = "INSERT IGNORE INTO RRTA (pkey, title, date, url, country, member, place,  decision_text, decsion) " +
+                    "VALUES (md5(?),?,?,?,?,?,?,?,?)";
+
+            Connection con = getConnectionResultsDB();
+            PreparedStatement stmt = con.prepareStatement(SQL);
+            stmt.setString(1, title); //An MD5 has of the title will be the pkey
+            stmt.setString(2, title);
+            stmt.setString(3, date.toString());
+            stmt.setString(4, url);
+            stmt.setString(5, country);
+            stmt.setString(6, member);
+            stmt.setString(7, place);
+            stmt.setString(8, decisionText);
+            stmt.setString(9, decisionResult);
+
+            stmt.executeUpdate();
+            Logger.info("Digest put to db without error");
+
+        }catch (SQLException e){
+            Logger.error("There was an error with your sql inserting a page digest" +  e);
+        }
+
+
+
+
+
+
+
+
+
+    }
+
+
 }
