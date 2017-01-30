@@ -22,9 +22,9 @@ public class DigestPage {
     }
 
 
-
-    public Digest consume(Document doc,String url) {
-        Digest digest = new Digest();;
+    public Digest consume(Document doc, String url) {
+        Digest digest = new Digest();
+        
 
         Element body = doc.body();
         Elements elements = body.select("div, p, b");
@@ -34,7 +34,7 @@ public class DigestPage {
         //url
         digest.setURL(url);
         //date
-        digest.setDate(getDate(doc));
+        digest.setDate(getDate(doc.title()));
         //Country
         digest.setCountry(getCountry(elements));
         //member
@@ -47,18 +47,12 @@ public class DigestPage {
         digest.setDecisionResult(getDecisionResult(elements));
 
 
-
-
-
-
-
-
         return digest;
     }
 
     private String getDecisionResult(Elements elements) {
-        String text="";
-        for (Element l: elements){
+        String text = "";
+        for (Element l : elements) {
             if (l.text().contains("Decision") || (l.text().contains("DECISION:") && (!l.text().contains("PLACE")))) {
                 if (l.text().toLowerCase().contains("remits")) {
                     text = "Remitted";
@@ -74,8 +68,8 @@ public class DigestPage {
     }
 
     private String getDecisionText(Elements elements) {
-        String text="";
-        for (Element l: elements){
+        String text = "";
+        for (Element l : elements) {
 
             if (l.text().contains("Decision") || (l.text().contains("DECISION:") && (!l.text().contains("PLACE")))) {
                 text = l.text();
@@ -88,8 +82,8 @@ public class DigestPage {
 
     private String getMember(Elements elements) {
 
-        String text="";
-        for (Element l: elements){
+        String text = "";
+        for (Element l : elements) {
 
             if (l.text().toLowerCase().contains("tribunal member:")) {
                 //System.out.println(l.text());
@@ -117,98 +111,28 @@ public class DigestPage {
 
     }
 
-    private Date getDate(Document doc) {
-        String title = doc.title();
-        int s = doc.title().lastIndexOf("(");
-        int f = doc.title().lastIndexOf(")");
+    private Date getDate(String title) {
+        Date date = null;
 
-        String date = doc.title().substring(s + 1, f);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMMM yyyy");
-        Date theDate = simpleDateFormat.parse(date, new ParsePosition(0));
-        Logger.debug("this is the data as a date!" + theDate);
+        int s = 0;
+        int f = 0;
+        s = title.lastIndexOf("(");
+        f = title.lastIndexOf(")");
+        if (s > 0 && f > 0) {
+            Logger.debug("string date intex" + s + " " + f);
+            String sdate = title.substring(s + 1, f);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMMM yyyy");
+            date = simpleDateFormat.parse(sdate, new ParsePosition(0));
+            Logger.debug("this is the data as a date!" + date);
+        }
 
-        return theDate;
+
+        return date;
     }
 
-//    public static void start(String target) {
-//        boolean flag1 = false, flag2 = false, flag3 = false, flag4 = false;
-//
-//
-//        try {
-//            Document doc = Jsoup.connect(target).get();
-//            //create a list of elements that are all urls
-//            System.out.println("The title of this doc is ? ::::> " + doc.title());
-//            Element b = doc.body();
-//            Elements elements = b.select("div, p, b");
-//
-//            //date
-//            String title = doc.title();
-//            int s = doc.title().lastIndexOf("(");
-//            int f = doc.title().lastIndexOf(")");
-//
-//            String date = doc.title().substring(s + 1, f);
-//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMMM yyyy");
-//            Date theDate = simpleDateFormat.parse(date, new ParsePosition(0));
-//            System.out.println("this is the data as a date!" + theDate);
-//
-//            //URL
-//            System.out.println("The URL of the target is : >>>>" + target);
-//
-//            for (Element l : elements) {
-//
-//                //Country
-//                if (l.text().toLowerCase().contains("country of reference:") && flag1 == false) {
-//                    //System.out.println(l.text());
-//                    System.out.println(getCountry(l.text()));
-//                    flag1 = true;
-//
-//                }
-//
-//                if (l.text().toLowerCase().contains("tribunal member:") && flag2 == false) {
-//                    //System.out.println(l.text());
-//                    String tmp;
-//                    tmp = l.text().replace("Tribunal Member:", "");
-//                    tmp = tmp.replace("TRIBUNAL MEMBER:", "");
-//                    tmp.trim();
-//                    System.out.println("MEMBER : " + tmp);
-//                    flag2 = true;
-//
-//                }
-//
-//                if (l.text().contains("Tribunal:") && flag2 == false) {
-//                    System.out.println(l.text());
-//                    String tmp = l.text().replace("Tribunal:", "");
-//                    tmp = tmp.replace("Member", "");
-//                    tmp.trim();
-//                    System.out.println("MEMBER : " + tmp);
-//                    flag2 = true;
-//                }
-//
-//                if (l.text().contains("Decision") && flag3 == false || (l.text().contains("DECISION:") && flag3 == false && !l.text().contains("PLACE"))) {
-//                    System.out.println(l.text());
-//                    System.out.print("OUTCOME :::");
-//                    if (l.text().toLowerCase().contains("remits")) {
-//                        System.out.println("Remitted");
-//                    } else {
-//                        System.out.println("Affirmed");
-//                    }
-//
-//                    flag3 = true;
-//                }
-//
-//
-//
-//
-//            }
-//
-//        } catch (IOException e) {
-//            System.out.println("There was an error");
-//        }
-//    }
-
     private String getCountry(Elements elements) {
-        String text="";
-        for (Element l: elements){
+        String text = "";
+        for (Element l : elements) {
             //Country
             if (l.text().toLowerCase().contains("country of reference:")) {
                 //System.out.println(l.text());
@@ -233,8 +157,8 @@ public class DigestPage {
     private String getPlace(Elements elements) {
 
 
-        String text="";
-        for (Element l: elements){
+        String text = "";
+        for (Element l : elements) {
             //place
             if (l.text().toLowerCase().contains("place")) {
                 text = l.text();

@@ -50,7 +50,7 @@ public class ProcessPage {
         Document doc = null;
         Digest digest = null;
         ArrayList<String> arrayList = new ArrayList<>();
-
+        String roughURL="";
         try {
             doc = Jsoup.connect(target).get();
             //create a list of elements that are all urls
@@ -58,26 +58,42 @@ public class ProcessPage {
 
             for (Element link : questions) {
                 if ((link.attr("abs:href").contains(BASE_URI)) && (!link.attr("abs:href").contains("#discourse-comments"))) {
-                    arrayList.add(link.attr("abs:href"));
+                    roughURL = link.attr("abs:href");
+
+                    arrayList.add(clean(roughURL));
                 }
             }
 
             //Links are sorted.
             //now to scann the document
 
-            //digest = digestPage.consume(doc);
-
+            digest = digestPage.consume(doc, target);
+            // digest.print(); //debug only.
+            dbHandler.submitDigest(digest);
+            dbHandler.insertNewURL(BASE_URI, arrayList);
 
         } catch (IOException e) {
             Logger.error("There was an error trying to connect to the target URL " + target + e);
-        }
-
-        if (doc != null) {
 
         }
 
-        //dbHandler.submitDigest(digest);
-        dbHandler.insertNewURL(BASE_URI, arrayList);
+    }
+
+    private String clean(String roughURL) {
+        String cleanURL;
+        int end = roughURL.lastIndexOf("#");
+        if(end == -1)
+            end = roughURL.lastIndexOf("?");
+
+        if(end == -1) {
+            cleanURL = roughURL;
+        }else{
+            Logger.debug("Clean URL" + roughURL);
+            cleanURL = roughURL.substring(0, end);
+            Logger.debug("Clean URL" + cleanURL);
+        }
+        
+        return  cleanURL;
     }
 
 

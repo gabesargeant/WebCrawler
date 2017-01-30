@@ -74,20 +74,6 @@ public class DBHandler {
         return con;
     }
 
-    public boolean testConnection()
-    {
-        Connection con = getConnectionDB();
-        if(con != null){
-            Logger.info("Connection Tested OK!");
-            return true;
-        }
-        else {
-            Logger.error("Error with Connection to DB, Check DBproperties file OR MySQL DB status.");
-            return false;
-        }
-
-    }
-
     public int existingCrawl(String URI){
         int ans = 0;
         try{
@@ -99,7 +85,7 @@ public class DBHandler {
 
             ResultSet rs = stmt.executeQuery();
             ans = rs.getInt(0);
-
+            con.close();
         }catch (SQLException e){
             Logger.error("There was and exception withe running sql"  +  e);
         }
@@ -135,7 +121,7 @@ public class DBHandler {
             if (!setProcessed(pkey)) {
                 nextTarget = null;
             }
-
+            con.close();
         }catch (Exception e){
             Logger.info("There was an error fetching the next Target URL from the queue " + e.getMessage());
         }
@@ -155,7 +141,7 @@ public class DBHandler {
             //execute and extract details
             stmt.executeUpdate();
             result = true;
-
+            con.close();
         }catch (Exception e){
             Logger.info("There was an error updating the status of the page visited" + e);
             result = false;
@@ -194,7 +180,7 @@ public class DBHandler {
             }
 
 
-
+            con.close();
 
         } catch (SQLException e) {
             Logger.info("There was an error inserting found URLS into the DB" + e);
@@ -216,6 +202,7 @@ public class DBHandler {
             if(rs.next()){
                 ans = rs.getInt(1);
             }
+            con.close();
         }catch (SQLException e){
             Logger.error("There was an error get a count from the queue " + e);
         }
@@ -223,7 +210,7 @@ public class DBHandler {
     }
 
     public void submitDigest(Digest digest) {
-        Date date = digest.getDate();
+        String date = digest.getDate();
         String title = digest.getTitle();
         String url = digest.getURL();
         String country = digest.getCountry();
@@ -233,14 +220,14 @@ public class DBHandler {
         String place = digest.getPlace();
 
         try{
-            String SQL = "INSERT IGNORE INTO RRTA (pkey, title, date, url, country, member, place,  decision_text, decsion) " +
+            String SQL = "INSERT IGNORE INTO RRTA (pkey, title, date, url, country, member, place,  decision_text, decision) " +
                     "VALUES (md5(?),?,?,?,?,?,?,?,?)";
 
             Connection con = getConnectionResultsDB();
             PreparedStatement stmt = con.prepareStatement(SQL);
-            stmt.setString(1, title); //An MD5 has of the title will be the pkey
+            stmt.setString(1, url); //An MD5 has of the title will be the pkey
             stmt.setString(2, title);
-            stmt.setString(3, date.toString());
+            stmt.setString(3, date);
             stmt.setString(4, url);
             stmt.setString(5, country);
             stmt.setString(6, member);
@@ -249,21 +236,10 @@ public class DBHandler {
             stmt.setString(9, decisionResult);
 
             stmt.executeUpdate();
-            Logger.info("Digest put to db without error");
-
+            Logger.debug("Digest put to db without error");
+            con.close();
         }catch (SQLException e){
             Logger.error("There was an error with your sql inserting a page digest" +  e);
         }
-
-
-
-
-
-
-
-
-
     }
-
-
 }

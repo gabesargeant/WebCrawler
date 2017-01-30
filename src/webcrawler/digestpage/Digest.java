@@ -1,5 +1,8 @@
 package webcrawler.digestpage;
 
+import org.pmw.tinylog.Logger;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -29,6 +32,11 @@ public class Digest {
     }
 
     public void setDate(Date date) {
+
+
+
+
+
         this.date = date;
     }
 
@@ -45,23 +53,49 @@ public class Digest {
     }
 
     public void setMember(String member) {
+
+        if(member.length() > 250){
+            member = member.substring(0,249);
+        }
         this.member = member;
     }
 
     public void setDecisionText(String decisionText) {
+
+        if(decisionText.length() > 999){
+            decisionText = decisionText.substring(0,999);
+        }
         this.decisionText = decisionText;
     }
 
     public void setDecisionResult(String decisionResult) {
         this.decisionResult = decisionResult;
+
     }
 
     public void setPlace(String place) {
         this.place = place;
     }
 
-    public Date getDate() {
-        return date;
+
+
+    //Start getters
+
+    public String getDate() {
+        String ans;
+        String datetime ="";
+        if(this.date != null)
+        {
+            SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            datetime = sdf.format(date);
+            Logger.info("#######################3 Date = " +  datetime);
+
+        }else{
+
+
+        }
+
+        return datetime;
     }
 
     public String getTitle() {
@@ -92,4 +126,20 @@ public class Digest {
         return place;
     }
 
+    public void print() {
+
+
+    if(date != null){
+        System.out.println("DATE" + date.toString());
+    }
+        System.out.println("TITLE " + title);
+        System.out.println("URL " + URL);
+        System.out.println("COUNTRY " + country);
+        System.out.println("MEMBER" +member);
+        System.out.println("DECISIONTEXT " + decisionText);
+        System.out.println("DECISIONRESULT " + decisionResult);
+        System.out.println("PLACE " + place);
+
+
+    }
 }

@@ -29,11 +29,11 @@ public class WebCrawler {
 
             ProcessPage p = new ProcessPage(URI);
             p.extractLinks(URI);
-        for (int i = 0; i < 1000; i++){
+        for (int i = 0; i < p.count(); i++){
             p.next();
             p.run();
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
