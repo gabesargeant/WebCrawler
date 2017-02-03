@@ -33,7 +33,7 @@ public class WebCrawler {
             p.next();
             p.run();
             try {
-                Thread.sleep(500);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -88,7 +88,7 @@ public class Digest {
         {
             SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             datetime = sdf.format(date);
-            Logger.info("#######################3 Date = " +  datetime);
+
 
         }else{
 

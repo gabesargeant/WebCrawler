@@ -130,24 +130,55 @@ public class DigestPage {
         return date;
     }
 
+//    private String getCountry(Elements elements) {
+//        String text = "";
+//        for (Element l : elements) {
+//            //Country
+//            if (l.text().toLowerCase().contains("")) {
+//                //System.out.println(l.text());
+//                text = l.text();
+//                break;// jumps out of the loop
+//            }
+//
+//        }
+//
+//        String country = "null";
+//        String tmp;
+//        text = text.toLowerCase();
+//        for (String loc : cntry) {
+//            tmp = loc.toLowerCase();
+//            if (text.contains(tmp)) {
+//                Logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ > "+ loc);
+//                return loc;
+//            }
+//        }
+//        Logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ > "+ country);
+//        return country;
+//    }
+
     private String getCountry(Elements elements) {
         String text = "";
         for (Element l : elements) {
             //Country
-            if (l.text().toLowerCase().contains("country of reference:")) {
-                //System.out.println(l.text());
-                text = l.text();
-                break;// jumps out of the loop
+            text = checkCountry(l.text());
+            if(text != null){
+                Logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ > " + text);
+                return text;
             }
 
         }
 
-        String country = "null";
+        return "null";
+    }
+
+    private String checkCountry(String text){
+        String country = null;
         String tmp;
         text = text.toLowerCase();
         for (String loc : cntry) {
             tmp = loc.toLowerCase();
             if (text.contains(tmp)) {
+                Logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ > " + loc);
                 return loc;
             }
         }
@@ -308,7 +339,7 @@ public class DigestPage {
             "Darwin",
             "Canberra",
             "Queanbeyan"};
-
+    //have remove australi and canada
     private String[] cntry = {
             "Aruba",
             "Afghanistan",
@@ -324,7 +355,6 @@ public class DigestPage {
             "Antarctica",
             "French Southern territories",
             "Antigua and Barbuda",
-            "Australia",
             "Austria",
             "Azerbaijan",
             "Burundi",
@@ -347,7 +377,7 @@ public class DigestPage {
             "Bouvet Island",
             "Botswana",
             "Central African Republic",
-            "Canada",
+
             "Cocos (Keeling) Islands",
             "Switzerland",
             "Chile",
@@ -380,7 +410,7 @@ public class DigestPage {
             "Estonia",
             "Ethiopia",
             "Finland",
-            "Fiji Islands",
+            "Fiji",
             "Falkland Islands",
             "France",
             "Faroe Islands",
@@ -491,7 +521,6 @@ public class DigestPage {
             "Qatar",
             "R�union",
             "Romania",
-            "Russian Federation",
             "Rwanda",
             "Saudi Arabia",
             "Sudan",
@@ -548,7 +577,243 @@ public class DigestPage {
             "Yugoslavia",
             "South Africa",
             "Zambia",
-            "Zimbabwe"};
+            "Zimbabwe",
+            "Albania",
+            "Algeria",
+            "Andorra",
+            "Angola",
+            "Antigua & Deps",
+            "Argentina",
+            "Armenia",
+            "Austria",
+            "Azerbaijan",
+            "Bahamas",
+            "Bahrain",
+            "Bangladesh",
+            "Barbados",
+            "Belarus",
+            "Belgium",
+            "Belize",
+            "Benin",
+            "Bhutan",
+            "Bolivia",
+            "Bosnia Herzegovina",
+            "Botswana",
+            "Brazil",
+            "Brunei",
+            "Bulgaria",
+            "Burkina",
+            "Burundi",
+            "Cambodia",
+            "Cameroon",
+
+            "Cape Verde",
+            "Central African Rep",
+            "Chad",
+            "Chile",
+            "China",
+            "Colombia",
+            "Comoros",
+            "Congo",
+            "Congo {Democratic Rep}",
+            "Costa Rica",
+            "Croatia",
+            "Cuba",
+            "Cyprus",
+            "Czech Republic",
+            "Denmark",
+            "Djibouti",
+            "Dominica",
+            "Dominican Republic",
+            "East Timor",
+            "Ecuador",
+            "Egypt",
+            "El Salvador",
+            "Equatorial Guinea",
+            "Eritrea",
+            "Estonia",
+            "Ethiopia",
+            "Fiji",
+            "Finland",
+            "France",
+            "Gabon",
+            "Gambia",
+            "Georgia",
+            "Germany",
+            "Ghana",
+            "Greece",
+            "Grenada",
+            "Guatemala",
+            "Guinea",
+            "Guinea-Bissau",
+            "Guyana",
+            "Haiti",
+            "Honduras",
+            "Hungary",
+            "Iceland",
+            "India",
+            "Indonesia",
+            "Iran",
+            "Iraq",
+            "Ireland {Republic}",
+            "Israel",
+            "Italy",
+            "Ivory Coast",
+            "Jamaica",
+            "Japan",
+            "Jordan",
+            "Kazakhstan",
+            "Kenya",
+            "Kiribati",
+            "Korea North",
+            "Korea South",
+            "Kosovo",
+            "Kuwait",
+            "Kyrgyzstan",
+            "Laos",
+            "Latvia",
+            "Lebanon",
+            "Lesotho",
+            "Liberia",
+            "Libya",
+            "Liechtenstein",
+            "Lithuania",
+            "Luxembourg",
+            "Macedonia",
+            "Madagascar",
+            "Malawi",
+            "Malaysia",
+            "Maldives",
+            "Mali",
+            "Malta",
+            "Marshall Islands",
+            "Mauritania",
+            "Mauritius",
+            "Mexico",
+            "Micronesia",
+            "Moldova",
+            "Monaco",
+            "Mongolia",
+            "Montenegro",
+            "Morocco",
+            "Mozambique",
+            "Myanmar, {Burma}",
+            "Namibia",
+            "Nauru",
+            "Nepal",
+            "Netherlands",
+            "New Zealand",
+            "Nicaragua",
+            "Niger",
+            "Nigeria",
+            "Norway",
+            "Oman",
+            "Pakistan",
+            "Palau",
+            "Panama",
+            "Palestine",
+            "Papua New Guinea",
+            "Paraguay",
+            "Peru",
+            "Philippines",
+            "Poland",
+            "Portugal",
+            "Qatar",
+            "Romania",
+            "Russia",
+            "Rwanda",
+            "St Kitts & Nevis",
+            "St Lucia",
+            "Saint Vincent & the Grenadines",
+            "Samoa",
+            "San Marino",
+            "Sao Tome & Principe",
+            "Saudi Arabia",
+            "Senegal",
+            "Serbia",
+            "Seychelles",
+            "Sierra Leone",
+            "Singapore",
+            "Slovakia",
+            "Slovenia",
+            "Solomon Islands",
+            "Somalia",
+            "South Africa",
+            "South Sudan",
+            "Spain",
+            "Sri Lanka",
+            "Sudan",
+            "Suriname",
+            "Swaziland",
+            "Sweden",
+            "Switzerland",
+            "Syria",
+            "Taiwan",
+            "Tajikistan",
+            "Tanzania",
+            "Thailand",
+            "Togo",
+            "Tonga",
+            "Trinidad & Tobago",
+            "Tunisia",
+            "Turkey",
+            "Turkmenistan",
+            "Tuvalu",
+            "Uganda",
+            "Ukraine",
+            "United Arab Emirates",
+            "United Kingdom",
+            "United States",
+            "Uruguay",
+            "Uzbekistan",
+            "Vanuatu",
+            "Vatican City",
+            "Venezuela",
+            "Vietnam",
+            "Yemen",
+            "Viet Nam",
+            "Kosovo",
+            "Cote D'Ivoire",
+            "Montenegro",
+            "Burma",
+            "Timor Leste",
+            "East Timor ",
+            "Occupied Territories",
+            "China ",
+            "Bagladesh",
+            "Russia",
+            "Serbia",
+            "Thailand",
+            "Indonesia",
+            "Serbia",
+            "Yugoslavia",
+            "BurmaBurmaBurma",
+            "Bangladesh",
+            "NepalNepalNepal",
+            "Occupied Territories",
+            "Afghanisan",
+            "Russia",
+            "Stateless",
+            "Bosnia",
+            "AfghanistanAfghanistanAfghanistan",
+            "Iraq/Iran",
+            "MalaysiaMalaysiaMalaysia",
+            "ColombiaColombiaColombia",
+            "AfghanistanAfghanistanAfghanistan",
+            "IndonesiaIndonesiaIndonesia",
+            "Sri Lanka",
+            "Burma",
+            "Fiji ",
+            "Serbia",
+            "Fiji",
+            "Occupied Territories",
+            "Serbia",
+            "Bosnia",
+            "West Bank",
+            "Libya",
+            "RussiaCountry:Country",
+            "China",
+            "Kazakhstan"};
 
 }
 

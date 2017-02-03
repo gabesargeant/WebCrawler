@@ -45,7 +45,7 @@ public class ProcessPage {
     }
 
     public void extractLinks(String target) {
-        Logger.info("Target URL" + target);
+        //Logger.info("Target URL" + target);
 
         Document doc = null;
         Digest digest = null;

@@ -123,7 +123,7 @@ public class DBHandler {
             }
             con.close();
         }catch (Exception e){
-            Logger.info("There was an error fetching the next Target URL from the queue " + e.getMessage());
+            Logger.error("There was an error fetching the next Target URL from the queue " + e.getMessage());
         }
 
         return nextTarget;
@@ -143,7 +143,7 @@ public class DBHandler {
             result = true;
             con.close();
         }catch (Exception e){
-            Logger.info("There was an error updating the status of the page visited" + e);
+            Logger.error("There was an error updating the status of the page visited" + e);
             result = false;
         }
 
@@ -183,7 +183,7 @@ public class DBHandler {
             con.close();
 
         } catch (SQLException e) {
-            Logger.info("There was an error inserting found URLS into the DB" + e);
+            Logger.error("There was an error inserting found URLS into the DB" + e);
         }
 
 
