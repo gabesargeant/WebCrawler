@@ -209,7 +209,7 @@ public class DBHandler {
         return ans;
     }
 
-    public void submitDigest(Digest digest) {
+    public void submitDigestRRTA(Digest digest) {
         String date = digest.getDate();
         String title = digest.getTitle();
         String url = digest.getURL();
@@ -221,6 +221,40 @@ public class DBHandler {
 
         try{
             String SQL = "INSERT IGNORE INTO RRTA (pkey, title, date, url, country, member, place,  decision_text, decision) " +
+                    "VALUES (md5(?),?,?,?,?,?,?,?,?)";
+
+            Connection con = getConnectionResultsDB();
+            PreparedStatement stmt = con.prepareStatement(SQL);
+            stmt.setString(1, url); //An MD5 has of the title will be the pkey
+            stmt.setString(2, title);
+            stmt.setString(3, date);
+            stmt.setString(4, url);
+            stmt.setString(5, country);
+            stmt.setString(6, member);
+            stmt.setString(7, place);
+            stmt.setString(8, decisionText);
+            stmt.setString(9, decisionResult);
+
+            stmt.executeUpdate();
+            Logger.debug("Digest put to db without error");
+            con.close();
+        }catch (SQLException e){
+            Logger.error("There was an error with your sql inserting a page digest" +  e);
+        }
+    }
+
+    public void submitDigestAATA(Digest digest) {
+        String date = digest.getDate();
+        String title = digest.getTitle();
+        String url = digest.getURL();
+        String country = digest.getCountry();
+        String member = digest.getMember();
+        String decisionText = digest.getDecisionText();
+        String decisionResult = digest.getDecisionResult();
+        String place = digest.getPlace();
+
+        try{
+            String SQL = "INSERT IGNORE INTO AATA (pkey, title, date, url, country, member, place,  decision_text, decision) " +
                     "VALUES (md5(?),?,?,?,?,?,?,?,?)";
 
             Connection con = getConnectionResultsDB();

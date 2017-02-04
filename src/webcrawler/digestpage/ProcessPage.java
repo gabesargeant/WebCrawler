@@ -18,7 +18,9 @@ public class ProcessPage {
     private final String BASE_URI;
     private String TARGET_URL;
     private DBHandler dbHandler;
-    private DigestPage digestPage;
+    private DigestPageRRTA digestPageRRTA;
+    private DigestPageAATA digestPageAATA;
+
 
 
     public ProcessPage(String baseURI) {
@@ -26,7 +28,8 @@ public class ProcessPage {
         dbHandler = new DBHandler();
 
         //prepares page digest mech
-        digestPage = new DigestPage();
+        digestPageRRTA = new DigestPageRRTA();
+        digestPageAATA = new DigestPageAATA();
     }
 
     public void next() {
@@ -65,11 +68,31 @@ public class ProcessPage {
             }
 
             //Links are sorted.
-            //now to scann the document
 
-            digest = digestPage.consume(doc, target);
-            // digest.print(); //debug only.
-            dbHandler.submitDigest(digest);
+            //##############################################################
+            //now to scan the document and digest contents
+
+            //########## RRTA #############################33
+            //digest = digestPageRRTA.consume(doc, target);
+            if(doc.title().toLowerCase().contains("refugee")){
+                digest = digestPageAATA.consume(doc, target);
+                dbHandler.submitDigestAATA(digest);
+                digest.print();
+            }
+
+
+
+             //debug only.
+
+            //this one for indexing the RRTA
+            //dbHandler.submitDigestRRTA(digest);
+
+
+            //This one for submitting the AATA
+
+
+
+            //Insert newURL
             dbHandler.insertNewURL(BASE_URI, arrayList);
 
         } catch (IOException e) {

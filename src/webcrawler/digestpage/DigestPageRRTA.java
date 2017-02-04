@@ -14,10 +14,10 @@ import java.util.Date;
 /**
  * Created by Gabe Sargeant on 22/01/17.
  */
-public class DigestPage {
+public class DigestPageRRTA {
 
 
-    public DigestPage() {
+    public DigestPageRRTA() {
 
     }
 
